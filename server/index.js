@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import UserRoutes from './routes/user.route.js';
+import AuthRoutes from './routes/auth.route.js';
 
 import path from 'path';
 const __dirname = path.resolve();
@@ -28,6 +29,7 @@ const app = express();
 // logging every request made to the server in the console
 app.use(morgan('dev'));
 
+// parse incoming requests with JSON payloads
 app.use(express.json());
 
 app.use(cookieParser());
@@ -37,3 +39,4 @@ app.listen(3000, () => {
 });
 
 app.use('/api/user', UserRoutes);
+app.use('/api/auth', AuthRoutes);
