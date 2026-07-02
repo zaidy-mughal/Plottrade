@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn'
 import About from './pages/About'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
+import PageNotFound from './components/PageNotFound'
 
 export default function App() {
   return <BrowserRouter>
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/about" element={<About />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   </BrowserRouter>
 }
