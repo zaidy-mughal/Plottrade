@@ -112,3 +112,12 @@ export const getListings = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserListings = async (req, res, next) => {
+  try {
+    const listings = await Listing.find({ userRef: req.user.id }).sort({ createdAt: "desc" });
+    return res.status(200).json(listings);
+  } catch (error) {
+    next(error);
+  }
+};
