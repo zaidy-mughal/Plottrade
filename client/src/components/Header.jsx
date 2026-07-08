@@ -1,52 +1,47 @@
-import { FaSearch } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { FaSearch } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <header className='bg-slate-200 shadow-md'>
-      <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
-        <Link to='/'>
-          <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className='text-slate-500'>Plot</span>
-            <span className='text-slate-700'>Trade</span>
+    <header className="bg-slate-200 shadow-md">
+      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+        <Link to="/">
+          <h1 className="font-bold text-sm sm:text-xl md:text-2xl flex flex-wrap">
+            <span className="text-blue-500">Plot</span>
+            <span className="text-slate-800">Trade</span>
           </h1>
         </Link>
-        <form
-          className='bg-slate-100 p-3 rounded-lg flex items-center'
+        <Link
+          to="/search"
+          className="bg-slate-100 hover:bg-blue-300 text-slate-600 hover:text-slate-800 p-3 rounded-full flex items-stretch gap-2 transition-colors font-medium text-sm sm:px-8 md:px-16 lg:px-32 xl:px-48"
+          title="Open properties search"
         >
-          <input
-            type='text'
-            placeholder='Search...'
-            className='bg-transparent focus:outline-none w-24 sm:w-64'
-          />
-          <button>
-            <FaSearch className='text-slate-600' />
-          </button>
-        </form>
-        <ul className='flex gap-4'>
-          <Link to='/'>
-            <li className='hidden sm:inline text-slate-700 hover:underline'>
+          <FaSearch className="text-slate-500" />
+          <span className="hidden sm:inline">Search Properties</span>
+        </Link>
+        <ul className="flex gap-6 items-center">
+          <Link to="/">
+            <li className="hidden sm:inline md:text-1xl text-slate-700 hover:underline">
               Home
             </li>
           </Link>
-          <Link to='/about'>
-            <li className='hidden sm:inline text-slate-700 hover:underline'>
+          <Link to="/about">
+            <li className="hidden sm:inline md:text-1xl text-slate-700 hover:underline">
               About
             </li>
           </Link>
-          <Link to='/profile'>
+          <Link to="/profile">
             {currentUser ? (
               <img
-                className='rounded-full h-7 w-7 object-cover'
+                className="rounded-full h-9 w-9 object-cover"
                 src={currentUser.avatar}
-                alt='profile'
+                alt="profile"
               />
             ) : (
-              <li className=' text-slate-700 hover:underline'> Sign in</li>
+              <li className=" text-slate-700 hover:underline"> Sign in</li>
             )}
           </Link>
         </ul>

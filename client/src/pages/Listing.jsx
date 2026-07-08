@@ -11,10 +11,10 @@ import {
   FaChair,
   FaMapMarkerAlt,
   FaParking,
-  FaShare,
+  FaRegCompass,
 } from 'react-icons/fa';
+import { HiOutlineShare, HiCheck } from 'react-icons/hi';
 import Contact from '../components/Contact';
-
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -49,100 +49,186 @@ export default function Listing() {
   }, [params.listingId]);
 
   return (
-    <main>
-      {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
-      {error && (
-        <p className='text-center my-7 text-2xl'>Something went wrong!</p>
+    <main className="min-h-screen bg-zinc-50 text-zinc-900 antialiased selection:bg-zinc-200">
+      {/* Elegant Loading State */}
+      {loading && (
+        <div className="flex flex-col justify-center items-center min-h-[70vh] gap-4">
+          <div className="h-6 w-6 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs tracking-widest uppercase text-zinc-400 font-medium">Loading Residence</p>
+        </div>
       )}
+
+      {/* Elegant Error State */}
+      {error && (
+        <div className="flex flex-col justify-center items-center min-h-[70vh] text-center px-6">
+          <p className="text-sm tracking-widest uppercase text-zinc-400 font-semibold mb-2">An Error Occurred</p>
+          <p className="text-zinc-600 font-serif text-lg max-w-md">We were unable to curate this property listing at this moment.</p>
+        </div>
+      )}
+
       {listing && !loading && !error && (
-        <div>
-          <Swiper navigation>
-            {listing.imageUrls.map((url) => (
-              <SwiperSlide key={url}>
-                <div
-                  className='h-[550px]'
-                  style={{
-                    background: `url(${url}) center no-repeat`,
-                    backgroundSize: 'cover',
-                  }}
-                ></div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
-            <FaShare
-              className='text-slate-500'
+        <div className="pb-24">
+          {/* Cinema-Style Media Showcase */}
+          <div className="relative max-w-[1400px] mx-auto md:px-4 pt-4 group">
+            <Swiper 
+              navigation 
+              className="overflow-hidden rounded-none md:rounded-2xl shadow-xl shadow-zinc-200/50"
+            >
+              {listing.imageUrls.map((url) => (
+                <SwiperSlide key={url}>
+                  <div
+                    className="h-[450px] sm:h-[550px] lg:h-[650px] w-full bg-cover bg-center transition-transform duration-1000 scale-100 hover:scale-[1.02]"
+                    style={{ backgroundImage: `url(${url})` }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+
+            {/* Minimalist Action Controls */}
+            <button
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
-                setTimeout(() => {
-                  setCopied(false);
-                }, 2000);
+                setTimeout(() => setCopied(false), 2000);
               }}
-            />
-          </div>
-          {copied && (
-            <p className='fixed top-[23%] right-[5%] z-10 rounded-md bg-slate-100 p-2'>
-              Link copied!
-            </p>
-          )}
-          <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4'>
-            <p className='text-2xl font-semibold'>
-              {listing.name} - ${' '}
-              {listing.offer
-                ? listing.discountPrice.toLocaleString('en-US')
-                : listing.regularPrice.toLocaleString('en-US')}
-              {listing.type === 'rent' && ' / month'}
-            </p>
-            <p className='flex items-center mt-6 gap-2 text-slate-600  text-sm'>
-              <FaMapMarkerAlt className='text-green-700' />
-              {listing.address}
-            </p>
-            <div className='flex gap-4'>
-              <p className='bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                {listing.type === 'rent' ? 'For Rent' : 'For Sale'}
-              </p>
-              {listing.offer && (
-                <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                  ${+listing.regularPrice - +listing.discountPrice} OFF
-                </p>
-              )}
-            </div>
-            <p className='text-slate-800'>
-              <span className='font-semibold text-black'>Description - </span>
-              {listing.description}
-            </p>
-            <ul className='text-green-900 font-semibold text-sm flex flex-wrap items-center gap-4 sm:gap-6'>
-              <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaBed className='text-lg' />
-                {listing.bedrooms > 1
-                  ? `${listing.bedrooms} beds `
-                  : `${listing.bedrooms} bed `}
-              </li>
-              <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaBath className='text-lg' />
-                {listing.bathrooms > 1
-                  ? `${listing.bathrooms} baths `
-                  : `${listing.bathrooms} bath `}
-              </li>
-              <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaParking className='text-lg' />
-                {listing.parking ? 'Parking spot' : 'No Parking'}
-              </li>
-              <li className='flex items-center gap-1 whitespace-nowrap '>
-                <FaChair className='text-lg' />
-                {listing.furnished ? 'Furnished' : 'Unfurnished'}
-              </li>
-            </ul>
-            {currentUser && listing.userRef !== currentUser._id && !contact && (
-              <button
-                onClick={() => setContact(true)}
-                className='bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'
-              >
-                Contact landlord
-              </button>
+              className="absolute top-8 right-8 z-10 bg-white/80 backdrop-blur-md p-3.5 rounded-full border border-zinc-200/50 text-zinc-800 hover:bg-white hover:text-zinc-950 shadow-sm transition-all duration-300 active:scale-95"
+              aria-label="Share property link"
+            >
+              <HiOutlineShare className="text-xl" />
+            </button>
+
+            {/* Subtle Text Toast */}
+            {copied && (
+              <div className="fixed bottom-8 right-8 z-50 flex items-center gap-2.5 bg-zinc-900 text-white px-5 py-3 rounded-lg shadow-xl tracking-wide text-xs uppercase font-medium animate-fade-in">
+                <HiCheck className="text-emerald-400 text-sm" />
+                <span>Link Copied to Portfolio</span>
+              </div>
             )}
-            {contact && <Contact listing={listing} />}
+          </div>
+
+          {/* Premium Editorial Grid Layout */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+              
+              {/* Left Column: Core Property Details */}
+              <div className="lg:col-span-2 space-y-10">
+                
+                {/* Header Information */}
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <span className="text-[10px] tracking-[0.2em] font-semibold uppercase px-2.5 py-1 bg-zinc-900 text-white rounded">
+                      {listing.type === 'rent' ? 'For Lease' : 'Exclusive Sale'}
+                    </span>
+                    {listing.offer && (
+                      <span className="text-[10px] tracking-[0.2em] font-semibold uppercase px-2.5 py-1 border border-zinc-300 text-zinc-600 rounded">
+                        Special Pricing Available
+                      </span>
+                    )}
+                  </div>
+
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-zinc-900 font-serif">
+                    {listing.name}
+                  </h1>
+
+                  <p className="flex items-center gap-2 text-zinc-500 text-sm tracking-wide">
+                    <FaMapMarkerAlt className="text-zinc-400 shrink-0" />
+                    <span>{listing.address}</span>
+                  </p>
+                </div>
+
+                <hr className="border-zinc-200" />
+
+                {/* Refined Spatial Amenities Layout */}
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400 mb-5">Residence Architecture</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="border border-zinc-200 bg-white p-4 rounded-xl flex flex-col gap-3">
+                      <FaBed className="text-xl text-zinc-400" />
+                      <div>
+                        <p className="text-xs text-zinc-400 uppercase font-medium tracking-wider">Bedrooms</p>
+                        <p className="text-base font-semibold text-zinc-800">{listing.bedrooms}</p>
+                      </div>
+                    </div>
+                    <div className="border border-zinc-200 bg-white p-4 rounded-xl flex flex-col gap-3">
+                      <FaBath className="text-xl text-zinc-400" />
+                      <div>
+                        <p className="text-xs text-zinc-400 uppercase font-medium tracking-wider">Bathrooms</p>
+                        <p className="text-base font-semibold text-zinc-800">{listing.bathrooms}</p>
+                      </div>
+                    </div>
+                    <div className="border border-zinc-200 bg-white p-4 rounded-xl flex flex-col gap-3">
+                      <FaParking className="text-xl text-zinc-400" />
+                      <div>
+                        <p className="text-xs text-zinc-400 uppercase font-medium tracking-wider">Vehicles</p>
+                        <p className="text-base font-semibold text-zinc-800">{listing.parking ? 'Allocated Space' : 'None'}</p>
+                      </div>
+                    </div>
+                    <div className="border border-zinc-200 bg-white p-4 rounded-xl flex flex-col gap-3">
+                      <FaChair className="text-xl text-zinc-400" />
+                      <div>
+                        <p className="text-xs text-zinc-400 uppercase font-medium tracking-wider">Interior</p>
+                        <p className="text-base font-semibold text-zinc-800">{listing.furnished ? 'Fully Furnished' : 'Unfurnished'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr className="border-zinc-200" />
+
+                {/* Editorial Narrative / Description */}
+                <div className="space-y-4">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400">The Space & Narrative</h2>
+                  <p className="text-zinc-600 font-serif leading-relaxed text-base sm:text-lg whitespace-pre-line">
+                    {listing.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Column: Premium Sticky Pricing & Concierge Contact Card */}
+              <div className="lg:sticky lg:top-8 bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.15em] text-zinc-400 mb-1">Investment Valuation</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-light tracking-tight text-zinc-900 font-serif">
+                      ${listing.offer
+                        ? listing.discountPrice.toLocaleString('en-US')
+                        : listing.regularPrice.toLocaleString('en-US')}
+                    </span>
+                    {listing.type === 'rent' && <span className="text-sm text-zinc-500 font-normal"> / mo</span>}
+                  </div>
+                  
+                  {listing.offer && (
+                    <p className="text-xs text-emerald-700 font-medium mt-2 bg-emerald-50 inline-block px-2.5 py-1 rounded">
+                      Exclusive Savings of ${(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-US')} Applied
+                    </p>
+                  )}
+                </div>
+
+                <div className="border-t border-zinc-100 pt-6">
+                  {currentUser && listing.userRef !== currentUser._id && !contact && (
+                    <button
+                      onClick={() => setContact(true)}
+                      className="w-full bg-zinc-900 text-white rounded-xl font-medium tracking-widest text-xs uppercase hover:bg-zinc-800 active:scale-[0.99] transition-all py-4 shadow-md shadow-zinc-900/10"
+                    >
+                      Inquire with Landlord
+                    </button>
+                  )}
+
+                  {contact && (
+                    <div className="animate-fade-in">
+                      <Contact listing={listing} />
+                    </div>
+                  )}
+
+                  {!currentUser && (
+                    <p className="text-xs text-center text-zinc-400 italic">
+                      Please authenticate to initiate broker concierge.
+                    </p>
+                  )}
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       )}
