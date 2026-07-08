@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import UserRoutes from './routes/user.route.js';
 import AuthRoutes from './routes/auth.route.js';
+import ListingRoutes from './routes/listing.route.js';
 
 import path from 'path';
 const __dirname = path.resolve();
@@ -39,6 +40,7 @@ app.listen(3000, () => {
 
 app.use('/api/user', UserRoutes);
 app.use('/api/auth', AuthRoutes);
+app.use('/api/listings', ListingRoutes);
 
 // error handling middleware
 app.use((err, req, res, next) => {

@@ -1,10 +1,10 @@
-import { GoogleAuthProvider, getAuth, signInWithRedirect } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { app } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 
-export default function OAuth() {
+export default function OAuth({ role }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleGoogleClick = async () => {
@@ -12,7 +12,7 @@ export default function OAuth() {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
 
-      const result = await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
 
       const res = await fetch('/api/auth/google', {
         method: 'POST',
@@ -23,6 +23,7 @@ export default function OAuth() {
           name: result.user.displayName,
           email: result.user.email,
           photo: result.user.photoURL,
+          role: role,
         }),
       });
       const data = await res.json();

@@ -22,7 +22,6 @@ export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
   // states for handlefileupload to cloudinary + backend.
-  const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadImageSuccess, setUploadImageSuccess] = useState(false);
 
@@ -77,7 +76,6 @@ export default function Profile() {
       //dispatch update user with new avatar
       dispatch(updateUserSuccess({ ...currentUser, avatar: imageUrl }));
       setUploadImageSuccess(true);
-
     } catch (err) {
       console.log(err);
     } finally {
@@ -147,7 +145,9 @@ export default function Profile() {
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
+      <h1 className="text-3xl font-semibold text-center my-7 uppercase">
+        {currentUser.role}'s Profile
+      </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={handleFileChange}
@@ -207,12 +207,6 @@ export default function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
-        <Link
-          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
-          to={"/create-listing"}
-        >
-          Create Listing
-        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
@@ -230,7 +224,20 @@ export default function Profile() {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
       </p>
-      <button className="text-green-700 w-full">Show Listings</button>
+      <div className="flex flex-col">
+        {currentUser?.role === "seller" ? (
+          <>
+            <Link
+              to="/my-listings"
+              className="flex-1 bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+            >
+              My Listings
+            </Link>
+          </>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 }
