@@ -22,7 +22,6 @@ export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
   // states for handlefileupload to cloudinary + backend.
-  const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadImageSuccess, setUploadImageSuccess] = useState(false);
 
