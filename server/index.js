@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import UserRoutes from './routes/user.route.js';
 import AuthRoutes from './routes/auth.route.js';
@@ -22,9 +23,17 @@ mongoose
   });
 
 
-
-
 const app = express();
+
+// enabling CORS
+const allowedOrigins = process.env.CLIENT_URL.split(",");
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 // logging every request made to the server in the console
 app.use(morgan('dev'));
@@ -34,8 +43,10 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!');
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}!`);
 });
 
 app.use('/api/user', UserRoutes);
