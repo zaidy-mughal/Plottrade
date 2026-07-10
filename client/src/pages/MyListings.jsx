@@ -10,7 +10,7 @@ export default function MyListings() {
     const fetchUserListings = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/listings/me`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/me`);
         const data = await res.json();
         setListings(data);
       } catch (error) {
@@ -30,7 +30,7 @@ export default function MyListings() {
       )
     ) {
       try {
-        const res = await fetch(`/api/listings/delete/${listingId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/delete/${listingId}`, {
           method: "DELETE",
         });
         const data = await res.json();

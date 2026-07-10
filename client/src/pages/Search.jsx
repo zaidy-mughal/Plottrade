@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Listing from '../components/Listing';
 import FilterBar from '../components/FilterBar';
 
@@ -45,7 +45,7 @@ export default function Search() {
       setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listings/?${searchQuery}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?${searchQuery}`);
       const data = await res.json();
       setShowMore(data.length > 8);
       setListings(data);
@@ -61,7 +61,7 @@ export default function Search() {
     const startIndex = listings.length;
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('startIndex', startIndex);
-    const res = await fetch(`/api/listings/?${urlParams.toString()}`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?${urlParams.toString()}`);
     const data = await res.json();
     if (data.length < 9) setShowMore(false);
     setListings((prev) => [...prev, ...data]);
