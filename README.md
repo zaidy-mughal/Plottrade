@@ -4,7 +4,7 @@ PlotTrade is a full-stack real estate marketplace for browsing, filtering, and m
 
 ## Live Demo Link
 
-The project is not publicly deployed yet. Add the production URL here once a live environment is available.
+[CLICK TO SEE THE CRAFT.](https://plottrade.vercel.app/)
 
 ## Features
 
