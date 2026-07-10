@@ -34,7 +34,7 @@ export default function UpdateListing() {
       const listingId = params.listingId;
       try {
         setLoading(true);
-        const res = await fetch(`/api/listings/${listingId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/${listingId}`);
         const data = await res.json();
         
         if (data.success === false) {
@@ -179,7 +179,7 @@ export default function UpdateListing() {
       setError(false);
 
       // Targets the dynamic update execution path via POST/PUT parameter
-      const res = await fetch(`/api/listings/update/${params.listingId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/update/${params.listingId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
