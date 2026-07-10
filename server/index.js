@@ -49,6 +49,15 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}!`);
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'PlotTrade API Server',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 app.use('/api/user', UserRoutes);
 app.use('/api/auth', AuthRoutes);
 app.use('/api/listings', ListingRoutes);
