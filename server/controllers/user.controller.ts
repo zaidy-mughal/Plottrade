@@ -1,11 +1,12 @@
+import { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
 import { errorHandler } from '../utils/errorHandler.js';
 
-
-export const updateUser = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
+export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user || req.user.id !== req.params.id) {
     return next(errorHandler(401, 'You can only update your own account!'));
+  }
   try {
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
@@ -24,7 +25,11 @@ export const updateUser = async (req, res, next) => {
       { new: true }
     );
 
-    const { password, ...rest } = updatedUser._doc;
+    if (!updatedUser) {
+      return next(errorHandler(404, 'User not found!'));
+    }
+
+    const { password, ...rest } = updatedUser.toObject();
 
     res.status(200).json(rest);
   } catch (error) {
@@ -32,9 +37,10 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-export const deleteUser = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
+export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user || req.user.id !== req.params.id) {
     return next(errorHandler(401, 'You can only delete your own account!'));
+  }
   try {
     await User.findByIdAndDelete(req.params.id);
     res.clearCookie('access_token');
@@ -44,26 +50,24 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-
-export const getUser = async (req, res, next) => {
+export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    
     const user = await User.findById(req.params.id);
-  
+
     if (!user) return next(errorHandler(404, 'User not found!'));
-  
-    const { password: pass, ...rest } = user._doc;
-  
+
+    const { password: pass, ...rest } = user.toObject();
+
     res.status(200).json(rest);
   } catch (error) {
     next(error);
   }
 };
 
-
-export const updateAvatar = async (req, res, next) => {
-  if (req.user.id !== req.params.id)
+export const updateAvatar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user || req.user.id !== req.params.id) {
     return next(errorHandler(401, 'You can only update your own avatar!'));
+  }
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
@@ -75,7 +79,11 @@ export const updateAvatar = async (req, res, next) => {
       { new: true }
     );
 
-    const { avatar } = updatedUser._doc;
+    if (!updatedUser) {
+      return next(errorHandler(404, 'User not found!'));
+    }
+
+    const { avatar } = updatedUser.toObject();
 
     res.status(200).json(avatar);
     console.log('Avatar updated successfully:', avatar);
@@ -83,3 +91,4 @@ export const updateAvatar = async (req, res, next) => {
     next(error);
   }
 };
+
