@@ -43,6 +43,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src"
+    "src",
+    "firebaseConfig.ts"
   ]
 }
