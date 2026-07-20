@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Listing from '../components/Listing';
-import FilterBar from '../components/FilterBar';
+import Listing, { type ListingItem } from '../components/Listing';
+import FilterBar, { type SidebarData } from '../components/FilterBar';
 
-export default function Search() {
+export default function Search(): React.JSX.Element {
   const location = useLocation();
 
-  const [sidebardata, setSidebardata] = useState({
+  const [sidebardata, setSidebardata] = useState<SidebarData>({
     searchTerm: '',
     type: 'all',
     parking: false,
@@ -16,10 +16,10 @@ export default function Search() {
     order: 'desc',
   });
 
-  const [loading, setLoading] = useState(false);
-  const [listings, setListings] = useState([]);
-  const [showMore, setShowMore] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [listings, setListings] = useState<ListingItem[]>([]);
+  const [showMore, setShowMore] = useState<boolean>(false);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -41,7 +41,7 @@ export default function Search() {
       order: orderFromUrl,
     });
 
-    const fetchListings = async () => {
+    const fetchListings = async (): Promise<void> => {
       setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
@@ -55,12 +55,10 @@ export default function Search() {
     fetchListings();
   }, [location.search]);
 
-
-
-  const onShowMoreClick = async () => {
+  const onShowMoreClick = async (): Promise<void> => {
     const startIndex = listings.length;
     const urlParams = new URLSearchParams(location.search);
-    urlParams.set('startIndex', startIndex);
+    urlParams.set('startIndex', String(startIndex));
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?${urlParams.toString()}`);
     const data = await res.json();
     if (data.length < 9) setShowMore(false);

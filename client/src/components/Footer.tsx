@@ -1,7 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-export default function Footer() {
-  const currentYear = new Date().getFullYear();
+export default function Footer(): React.JSX.Element {
+  const currentYear: number = new Date().getFullYear();
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800 font-sans">
@@ -9,12 +10,12 @@ export default function Footer() {
         {/* Section: Quick Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
           <div className="lg:col-span-1">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-2xl font-bold text-white tracking-tight"
             >
               Plot<span className="text-blue-500">Trade</span>
-            </a>
+            </Link>
             <p className="mt-4 text-slate-400 max-w-sm leading-relaxed">
               Your trusted marketplace for buying, selling, and trading premium
               real estate plots. Find your next investment with confidence.
@@ -26,20 +27,20 @@ export default function Footer() {
             </h5>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a
-                  href="/search"
+                <Link
+                  to="/search"
                   className="hover:text-blue-400 transition-colors"
                 >
                   Browse Plots
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/create-listing"
+                <Link
+                  to="/create-listing"
                   className="hover:text-blue-400 transition-colors"
                 >
                   List Your Property
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -50,20 +51,20 @@ export default function Footer() {
             </h5>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <a
-                  href="/about"
+                <Link
+                  to="/about"
                   className="hover:text-blue-400 transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/about"
+                <Link
+                  to="/about"
                   className="hover:text-blue-400 transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -100,21 +101,21 @@ export default function Footer() {
             reserved.
           </div>
           <div className="flex gap-6">
-            <a
-              href="/privacy"
+            <Link
+              to="/privacy"
               className="hover:text-slate-300 transition-colors"
             >
               Privacy Policy
-            </a>
-            <a href="/terms" className="hover:text-slate-300 transition-colors">
+            </Link>
+            <Link to="/terms" className="hover:text-slate-300 transition-colors">
               Terms of Service
-            </a>
-            <a
-              href="/cookies"
+            </Link>
+            <Link
+              to="/cookies"
               className="hover:text-slate-300 transition-colors"
             >
               Cookie Preferences
-            </a>
+            </Link>
           </div>
         </div>
       </div>

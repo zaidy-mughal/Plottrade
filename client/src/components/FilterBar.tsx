@@ -1,16 +1,37 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+export interface SidebarData {
+  searchTerm: string;
+  type: string;
+  parking: boolean;
+  furnished: boolean;
+  offer: boolean;
+  sort: string;
+  order: string;
+}
+
+export interface FilterBarProps {
+  sidebardata: SidebarData;
+  setSidebardata: React.Dispatch<React.SetStateAction<SidebarData>>;
+  isFilterOpen: boolean;
+  setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export default function FilterBar({
   sidebardata,
   setSidebardata,
   isFilterOpen,
   setIsFilterOpen,
-}) {
+}: FilterBarProps) {
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { id, value, checked, type } = e.target;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { id, value } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    const type = e.target.type;
 
     if (id === "all" || id === "rent" || id === "sale") {
       setSidebardata((prev) => ({ ...prev, type: id }));
@@ -25,14 +46,14 @@ export default function FilterBar({
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebardata.searchTerm);
     urlParams.set("type", sidebardata.type);
-    urlParams.set("parking", sidebardata.parking);
-    urlParams.set("furnished", sidebardata.furnished);
-    urlParams.set("offer", sidebardata.offer);
+    urlParams.set("parking", String(sidebardata.parking));
+    urlParams.set("furnished", String(sidebardata.furnished));
+    urlParams.set("offer", String(sidebardata.offer));
     urlParams.set("sort", sidebardata.sort);
     urlParams.set("order", sidebardata.order);
     navigate(`${window.location.pathname}?${urlParams.toString()}`);

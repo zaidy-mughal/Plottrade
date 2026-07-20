@@ -1,9 +1,11 @@
+import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store";
 
-export default function Header() {
-  const { currentUser } = useSelector((state) => state.user);
+export default function Header(): React.JSX.Element {
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   return (
     <header className="bg-slate-200 shadow-md">

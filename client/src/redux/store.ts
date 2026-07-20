@@ -1,16 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user/userSlice";
 import { persistReducer, persistStore } from "redux-persist";
-import storageModule from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage";
 
-const storage = storageModule.default ?? storageModule;
-console.log(storage.document);
+// Fix for redux-persist CJS/ESM interop in Vite
+const storageEngine =
+  (storage as unknown as { default: typeof storage }).default || storage;
 
 const rootReducer = combineReducers({ user: userReducer });
 
 const persistConfig = {
   key: "root",
-  storage,
+  storage: storageEngine,
   version: 1,
 };
 
@@ -25,3 +26,6 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

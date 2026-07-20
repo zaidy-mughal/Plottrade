@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
 import "swiper/css/bundle";
-import Listing from "../components/Listing";
+import Listing, { type ListingItem } from "../components/Listing";
 
-export default function Home() {
-  const [offerListings, setOfferListings] = useState([]);
-  const [saleListings, setSaleListings] = useState([]);
-  const [rentListings, setRentListings] = useState([]);
+export default function Home(): React.JSX.Element {
+  const [offerListings, setOfferListings] = useState<ListingItem[]>([]);
+  const [saleListings, setSaleListings] = useState<ListingItem[]>([]);
+  const [rentListings, setRentListings] = useState<ListingItem[]>([]);
   SwiperCore.use([Navigation]);
 
   useEffect(() => {
@@ -75,14 +75,13 @@ export default function Home() {
         {offerListings &&
           offerListings.length > 0 &&
           offerListings.map((listing) => (
-            <SwiperSlide>
+            <SwiperSlide key={listing._id}>
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
-                className="h-\[500px\]"
-                key={listing._id}
+                className="h-[500px]"
               ></div>
             </SwiperSlide>
           ))}
