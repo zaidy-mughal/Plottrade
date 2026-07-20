@@ -1,10 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { User } from '../redux/user/userSlice';
 
-export default function Contact({ listing }) {
-  const [landlord, setLandlord] = useState(null);
-  const [message, setMessage] = useState('');
-  const onChange = (e) => {
+export interface Listing {
+  userRef: string;
+  name: string;
+  [key: string]: any;
+}
+
+interface ContactProps {
+  listing: Listing;
+}
+
+export default function Contact({ listing }: ContactProps) {
+  const [landlord, setLandlord] = useState<User | null>(null);
+  const [message, setMessage] = useState<string>('');
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
@@ -12,7 +24,7 @@ export default function Contact({ listing }) {
     const fetchLandlord = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/${listing.userRef}`);
-        const data = await res.json();
+        const data: User = await res.json();
         setLandlord(data);
       } catch (error) {
         console.log(error);
@@ -20,6 +32,7 @@ export default function Contact({ listing }) {
     };
     fetchLandlord();
   }, [listing.userRef]);
+
   return (
     <>
       {landlord && (
@@ -32,7 +45,7 @@ export default function Contact({ listing }) {
           <textarea
             name='message'
             id='message'
-            rows='2'
+            rows={2}
             value={message}
             onChange={onChange}
             placeholder='Enter your message here...'
@@ -40,10 +53,10 @@ export default function Contact({ listing }) {
           ></textarea>
 
           <Link
-          to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
-          className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'
+            to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
+            className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'
           >
-            Send Message          
+            Send Message
           </Link>
         </div>
       )}

@@ -1,7 +1,27 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
 
-export default function Listing({ listing }) {
+export interface ListingItem {
+  _id: string;
+  name: string;
+  address: string;
+  description: string;
+  imageUrls: string[];
+  offer: boolean;
+  discountPrice: number;
+  regularPrice: number;
+  type: string;
+  bedrooms: number;
+  bathrooms: number;
+  [key: string]: any;
+}
+
+export interface ListingProps {
+  listing: ListingItem;
+}
+
+export default function Listing({ listing }: ListingProps): React.JSX.Element {
   return (
     <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
       <Link to={`/listing/${listing._id}`}>
