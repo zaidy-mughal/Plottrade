@@ -1,15 +1,31 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import type { RootState } from "../redux/store";
 
-export default function UpdateListing() {
-  const { currentUser } = useSelector((state) => state.user);
+interface UpdateListingFormData {
+  imageUrls: string[];
+  name: string;
+  description: string;
+  address: string;
+  type: string;
+  bedrooms: number | string;
+  bathrooms: number | string;
+  regularPrice: number | string;
+  discountPrice: number | string;
+  offer: boolean;
+  parking: boolean;
+  furnished: boolean;
+}
+
+export default function UpdateListing(): React.JSX.Element {
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
-  const params = useParams(); 
+  const params = useParams<{ listingId: string }>();
 
-  const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({
+  const [files, setFiles] = useState<File[]>([]);
+  const [formData, setFormData] = useState<UpdateListingFormData>({
     imageUrls: [],
     name: "",
     description: "",
@@ -23,15 +39,17 @@ export default function UpdateListing() {
     parking: false,
     furnished: false,
   });
-  const [imageUploadError, setImageUploadError] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | false>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string | false>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch the data from backend when component mounts
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchListing = async (): Promise<void> => {
       const listingId = params.listingId;
+      if (!listingId) return;
+
       try {
         setLoading(true);
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/${listingId}`);
@@ -46,8 +64,9 @@ export default function UpdateListing() {
         // Populates formData automatically with existing record properties
         setFormData(data);
         setLoading(false);
-      } catch (err) {
-        setError(err.message);
+      } catch (err: unknown) {
+        const errorObj = err as Error;
+        setError(errorObj.message);
         setLoading(false);
       }
     };
@@ -55,37 +74,7 @@ export default function UpdateListing() {
     fetchListing();
   }, [params.listingId]);
 
-  const handleImageSubmit = async () => {
-    if (files.length === 0) {
-      setImageUploadError("Please select at least one image.");
-      return;
-    }
-
-    if (files.length + formData.imageUrls.length > 6) {
-      setImageUploadError("You can only upload 6 images per listing.");
-      return;
-    }
-
-    try {
-      setUploading(true);
-      setImageUploadError(false);
-
-      const imageUrls = await Promise.all(
-        Array.from(files).map((file) => storeImage(file))
-      );
-
-      setFormData((prev) => ({
-        ...prev,
-        imageUrls: [...prev.imageUrls, ...imageUrls].filter(Boolean), // safety filter against null values
-      }));
-    } catch (error) {
-      setImageUploadError(error.message);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const storeImage = async (file) => {
+  const storeImage = async (file: File): Promise<string | null> => {
     if (!file) {
       setImageUploadError("Please select an image.");
       return null;
@@ -103,16 +92,16 @@ export default function UpdateListing() {
       return null;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "plottrade");
+    const uploadFormData = new FormData();
+    uploadFormData.append("file", file);
+    uploadFormData.append("upload_preset", "plottrade");
 
     try {
       setImageUploadError(false);
 
       const response = await axios.post(
         import.meta.env.VITE_CLOUDINARY_URL,
-        formData,
+        uploadFormData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -121,59 +110,96 @@ export default function UpdateListing() {
       );
 
       return response.data.secure_url;
-    } catch (error) {
+    } catch (err: unknown) {
+      const axiosErr = err as AxiosError<{ error?: { message?: string } }>;
       setImageUploadError(
-        error.response?.data?.error?.message || "Image upload failed."
+        axiosErr.response?.data?.error?.message || "Image upload failed."
       );
       return null;
     }
   };
 
-  const handleRemoveImage = (index) => {
-    setFormData({
-      ...formData,
-      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
-    });
-  };
-
-  const handleChange = (e) => {
-    if (e.target.id === "sale" || e.target.id === "rent") {
-      setFormData({
-        ...formData,
-        type: e.target.id,
-      });
+  const handleImageSubmit = async (): Promise<void> => {
+    if (files.length === 0) {
+      setImageUploadError("Please select at least one image.");
+      return;
     }
 
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.checked,
-      });
+    if (files.length + formData.imageUrls.length > 6) {
+      setImageUploadError("You can only upload 6 images per listing.");
+      return;
     }
 
-    if (
-      e.target.type === "number" ||
-      e.target.type === "text" ||
-      e.target.type === "textarea"
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value,
-      });
+    try {
+      setUploading(true);
+      setImageUploadError(false);
+
+      const imageUrls = await Promise.all(
+        files.map((file) => storeImage(file))
+      );
+
+      const validImageUrls = imageUrls.filter((url): url is string => url !== null);
+
+      setFormData((prev) => ({
+        ...prev,
+        imageUrls: [...prev.imageUrls, ...validImageUrls],
+      }));
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      setImageUploadError(errorObj.message);
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleRemoveImage = (index: number): void => {
+    setFormData((prev) => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const { id, value, type } = e.target;
+
+    if (id === "sale" || id === "rent") {
+      setFormData((prev) => ({
+        ...prev,
+        type: id,
+      }));
+    }
+
+    if (id === "parking" || id === "furnished" || id === "offer") {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({
+        ...prev,
+        [id]: checked,
+      }));
+    }
+
+    if (type === "number" || type === "text" || type === "textarea") {
+      setFormData((prev) => ({
+        ...prev,
+        [id]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = async (
+    e: React.SubmitEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     try {
-      if (formData.imageUrls.length < 1)
-        return setError("You must upload at least one image");
-      if (+formData.regularPrice < +formData.discountPrice)
-        return setError("Discount price must be lower than regular price");
+      if (formData.imageUrls.length < 1) {
+        setError("You must upload at least one image");
+        return;
+      }
+      if (+formData.regularPrice < +formData.discountPrice) {
+        setError("Discount price must be lower than regular price");
+        return;
+      }
       
       setLoading(true);
       setError(false);
@@ -186,7 +212,7 @@ export default function UpdateListing() {
         },
         body: JSON.stringify({
           ...formData,
-          userRef: currentUser._id,
+          userRef: currentUser?._id,
         }),
       });
       
@@ -199,8 +225,9 @@ export default function UpdateListing() {
       }
       
       navigate(`/listing/${data._id}`);
-    } catch (error) {
-      setError(error.message);
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      setError(errorObj.message);
       setLoading(false);
     }
   };
@@ -217,14 +244,13 @@ export default function UpdateListing() {
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
-            maxLength="62"
-            minLength="10"
+            maxLength={62}
+            minLength={10}
             required
             onChange={handleChange}
             value={formData.name}
           />
           <textarea
-            type="text"
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"
@@ -369,7 +395,7 @@ export default function UpdateListing() {
           </p>
           <div className="flex gap-4">
             <input
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={(e) => setFiles(e.target.files ? Array.from(e.target.files) : [])}
               className="block w-full border rounded p-2
              file:mr-4
              file:rounded

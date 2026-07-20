@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
@@ -14,19 +14,21 @@ import {
 } from 'react-icons/fa';
 import { HiOutlineShare, HiCheck } from 'react-icons/hi';
 import Contact from '../components/Contact';
+import { type ListingItem } from '../components/Listing';
+import type { RootState } from '../redux/store';
 
-export default function Listing() {
+export default function Listing(): React.JSX.Element {
   SwiperCore.use([Navigation]);
-  const [listing, setListing] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [contact, setContact] = useState(false);
-  const params = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const [listing, setListing] = useState<ListingItem | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
+  const [contact, setContact] = useState<boolean>(false);
+  const params = useParams<{ listingId: string }>();
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const fetchListing = async () => {
+    const fetchListing = async (): Promise<void> => {
       try {
         setLoading(true);
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/${params.listingId}`);
@@ -39,12 +41,14 @@ export default function Listing() {
         setListing(data);
         setLoading(false);
         setError(false);
-      } catch (error) {
+      } catch (err: unknown) {
         setError(true);
         setLoading(false);
       }
     };
-    fetchListing();
+    if (params.listingId) {
+      fetchListing();
+    }
   }, [params.listingId]);
 
   return (

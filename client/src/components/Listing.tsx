@@ -4,6 +4,7 @@ import { MdLocationOn } from 'react-icons/md';
 
 export interface ListingItem {
   _id: string;
+  userRef: string;
   name: string;
   address: string;
   description: string;

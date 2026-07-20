@@ -1,34 +1,40 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 import RoleSelector from "../components/RoleSelector";
 
-export default function SignIn() {
-  const [formData, setFormData] = useState({
+interface SignUpFormData {
+  role: string;
+  username: string;
+  email: string;
+  password: string;
+}
+
+export default function SignUp(): React.JSX.Element {
+  const [formData, setFormData] = useState<SignUpFormData>({
     role: "buyer",
+    username: "",
     email: "",
     password: "",
   });
-  const { loading, error } = useSelector((state) => state.user);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setFormData((prev) => ({
+      ...prev,
       [e.target.id]: e.target.value,
-    });
+    }));
   };
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async (
+    e: React.SubmitEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     try {
-      dispatch(signInStart());
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signin`, {
+      setLoading(true);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,20 +44,31 @@ export default function SignIn() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        setLoading(false);
+        setError(data.message);
         return;
       }
-      dispatch(signInSuccess(data));
-      navigate("/");
-    } catch (error) {
-      dispatch(signInFailure(error.message));
+      setLoading(false);
+      setError(null);
+      navigate("/sign-in");
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      setLoading(false);
+      setError(errorObj.message);
     }
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
+      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <RoleSelector formData={formData} setFormData={setFormData} />
+        <input
+          type="text"
+          placeholder="username"
+          className="border p-3 rounded-lg"
+          id="username"
+          onChange={handleChange}
+        />
         <input
           type="email"
           placeholder="email"
@@ -71,14 +88,14 @@ export default function SignIn() {
           disabled={loading}
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
-          {loading ? "Loading..." : "Sign In"}
+          {loading ? "Loading..." : "Sign Up"}
         </button>
         <OAuth role={formData.role} />
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Dont have an account?</p>
-        <Link to={"/sign-up"}>
-          <span className="text-blue-700">Sign up</span>
+        <p>Have an account?</p>
+        <Link to={"/sign-in"}>
+          <span className="text-blue-700">Sign in</span>
         </Link>
       </div>
       {error && <p className="text-red-500 mt-5">{error}</p>}

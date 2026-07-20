@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Listing from "../components/Listing";
+import Listing, { type ListingItem } from "../components/Listing";
 
-export default function MyListings() {
-  const [loading, setLoading] = useState(false);
-  const [listings, setListings] = useState([]);
+export default function MyListings(): React.JSX.Element {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [listings, setListings] = useState<ListingItem[]>([]);
 
   useEffect(() => {
-    const fetchUserListings = async () => {
+    const fetchUserListings = async (): Promise<void> => {
       setLoading(true);
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/me`);
@@ -23,7 +23,7 @@ export default function MyListings() {
     fetchUserListings();
   }, []);
 
-  const handleDeleteListing = async (listingId) => {
+  const handleDeleteListing = async (listingId: string): Promise<void> => {
     if (
       window.confirm(
         "Are you completely sure you want to permanently delete this listing?",
