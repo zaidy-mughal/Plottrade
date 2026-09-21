@@ -73,7 +73,7 @@ cd server
 pnpm dev
 ```
 
-The API runs on `http://localhost:3000`.
+The API runs on `http://localhost:5000`.
 
 ### 5. Start the frontend
 
