@@ -45,7 +45,7 @@ export default function Search(): React.JSX.Element {
       setLoading(true);
       setShowMore(false);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?${searchQuery}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?${searchQuery}`);
       const data = await res.json();
       setShowMore(data.length > 8);
       setListings(data);
@@ -59,7 +59,7 @@ export default function Search(): React.JSX.Element {
     const startIndex = listings.length;
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('startIndex', String(startIndex));
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?${urlParams.toString()}`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?${urlParams.toString()}`);
     const data = await res.json();
     if (data.length < 9) setShowMore(false);
     setListings((prev) => [...prev, ...data]);

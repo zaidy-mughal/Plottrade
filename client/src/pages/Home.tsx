@@ -15,7 +15,7 @@ export default function Home(): React.JSX.Element {
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?offer=true&limit=4`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?offer=true&limit=4`);
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
@@ -25,7 +25,7 @@ export default function Home(): React.JSX.Element {
     };
     const fetchRentListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?type=rent&limit=4`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?type=rent&limit=4`);
         const data = await res.json();
         setRentListings(data);
         fetchSaleListings();
@@ -36,7 +36,7 @@ export default function Home(): React.JSX.Element {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/listings/?type=sale&limit=4`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?type=sale&limit=4`);
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
