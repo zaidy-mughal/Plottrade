@@ -46,7 +46,7 @@ async function startServer() {
   app.use(cookieParser());
 
   // 5. Routes
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/api', (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'PlotTrade API Server',

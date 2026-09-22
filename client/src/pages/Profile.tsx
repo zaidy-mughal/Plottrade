@@ -75,7 +75,7 @@ export default function Profile(): React.JSX.Element {
       const imageUrl = await uploadToCloudinary(file);
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/user/update/avatar/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/user/update/avatar/${currentUser._id}`,
         {
           avatar: imageUrl,
         },
@@ -109,7 +109,7 @@ export default function Profile(): React.JSX.Element {
     try {
       dispatch(updateUserStart());
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/user/update/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/user/update/${currentUser._id}`,
         {
           method: "POST",
           headers: {
@@ -138,7 +138,7 @@ export default function Profile(): React.JSX.Element {
     try {
       dispatch(deleteUserStart());
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/user/delete/${currentUser._id}`,
+        `${import.meta.env.VITE_API_URL}/user/delete/${currentUser._id}`,
         {
           method: "DELETE",
         },
@@ -159,7 +159,7 @@ export default function Profile(): React.JSX.Element {
     try {
       dispatch(signOutUserStart());
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/signout`,
+        `${import.meta.env.VITE_API_URL}/auth/signout`,
       );
       const data = await res.json();
       if (data.success === false) {

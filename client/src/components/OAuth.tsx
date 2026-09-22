@@ -21,7 +21,7 @@ export default function OAuth({ role }: OAuthProps): React.JSX.Element {
 
       const result = await signInWithPopup(auth, provider);
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/google`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
