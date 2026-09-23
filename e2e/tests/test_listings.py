@@ -1,11 +1,13 @@
 from pages.login_page import LoginPage
 from pages.listing_page import ListingPage
 from selenium.webdriver.support import expected_conditions as EC
+from PIL import Image
 
 def test_seller_can_create_listing(driver, tmp_path):
     # 1. Setup: Create a dummy image file for the upload test
     dummy_image = tmp_path / "test_property.jpg"
-    dummy_image.write_bytes(b"fake image content")
+    image = Image.new("RGB", (100, 100), color="white")
+    image.save(dummy_image, format="JPEG")
 
     # 2. Authenticate as Seller
     login_page = LoginPage(driver)

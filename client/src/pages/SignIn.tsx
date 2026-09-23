@@ -42,6 +42,7 @@ export default function SignIn(): React.JSX.Element {
       dispatch(signInStart());
       const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/signin`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

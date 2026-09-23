@@ -10,7 +10,9 @@ export default function MyListings(): React.JSX.Element {
     const fetchUserListings = async (): Promise<void> => {
       setLoading(true);
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/me`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/me`,{
+          credentials: "include",
+        });
         const data = await res.json();
         setListings(data);
       } catch (error) {

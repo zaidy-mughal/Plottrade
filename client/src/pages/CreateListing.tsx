@@ -175,6 +175,7 @@ export default function CreateListing(): React.JSX.Element {
       setError(false);
       const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/create`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

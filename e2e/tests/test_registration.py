@@ -1,5 +1,6 @@
 import csv
 import pytest
+from selenium.webdriver.support import expected_conditions as EC
 from pages.registration_page import RegistrationPage
 
 def get_test_data():
@@ -15,6 +16,8 @@ def test_user_registration(driver, user):
     reg_page.select_role(user["role"])
     reg_page.fill_form(user["username"], user["email"], user["password"])
     reg_page.submit()
+
+    reg_page.wait.until(EC.url_contains("/sign-in"))
     
     # Verify redirection to sign-in page upon successful registration
     assert "sign-in" in driver.current_url
