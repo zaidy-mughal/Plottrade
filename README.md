@@ -20,8 +20,12 @@ PlotTrade is a full-stack real estate marketplace for browsing, filtering, and m
 
 - Frontend: React 19, Vite, React Router, Redux Toolkit, Tailwind CSS, Swiper, Axios
 - Backend: Node.js, Express, MongoDB, Mongoose, JWT, bcryptjs, cookie-parser, Morgan
-- Authentication and media: Firebase, Cloudinary
+- Authentication: Firebase
+- Media: Cloudinary
 - Package manager: pnpm
+- Deployment: AWS EC2, AWS Secrets Manager, IAM, Linux, Docker, Nginx.
+- Domain: Name.com
+- SSL Certificate: LetsEncryp and certbot.
 
 ## Architecture Overview
 
