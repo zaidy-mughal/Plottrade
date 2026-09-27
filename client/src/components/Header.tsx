@@ -8,7 +8,7 @@ export default function Header(): React.JSX.Element {
   const { currentUser } = useSelector((state: RootState) => state.user);
 
   return (
-    <header className="bg-slate-200 shadow-md">
+    <header className="sticky top-0 z-50 bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl md:text-2xl flex flex-wrap">
