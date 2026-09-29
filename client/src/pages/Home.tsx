@@ -81,7 +81,7 @@ export default function Home(): React.JSX.Element {
         {/* Right Side: Image */}
         <div className="flex-1 flex justify-center lg:justify-end w-full">
           <img
-            src="/public/hero.png"
+            src="/hero.png"
             alt="Property graphic"
             className="w-full max-w-lg h-auto object-contain"
           />
