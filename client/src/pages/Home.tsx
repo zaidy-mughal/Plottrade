@@ -54,11 +54,12 @@ export default function Home(): React.JSX.Element {
   return (
     <div>
       {/* top */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 p-10 px-3 max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row items-center justify-between p-10 px-3 max-w-6xl mx-auto">
         {/* Left Side: Content */}
         <div className="flex flex-col gap-6 flex-1">
           <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
-            Step into your future <span className="text-blue-500">Door</span>
+            Step into your future
+            <span className="text-blue-500"> Door</span>
             <br />
             effortlessly
           </h1>
@@ -79,11 +80,11 @@ export default function Home(): React.JSX.Element {
         </div>
 
         {/* Right Side: Image */}
-        <div className="flex-1 flex justify-center lg:justify-end w-full">
+        <div className="flex-1 flex justify-center items-center lg:justify-end w-full min-w-0 m-0 p-0">
           <img
             src="/hero.png"
             alt="Property graphic"
-            className="w-full max-w-lg h-auto object-contain"
+            className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl h-auto max-h-[70vh] object-contain"
           />
         </div>
       </div>
