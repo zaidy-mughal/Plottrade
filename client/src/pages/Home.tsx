@@ -15,7 +15,9 @@ export default function Home(): React.JSX.Element {
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?offer=true&limit=4`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/listings/?offer=true&limit=4`,
+        );
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
@@ -25,7 +27,9 @@ export default function Home(): React.JSX.Element {
     };
     const fetchRentListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?type=rent&limit=4`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/listings/?type=rent&limit=4`,
+        );
         const data = await res.json();
         setRentListings(data);
         fetchSaleListings();
@@ -36,7 +40,9 @@ export default function Home(): React.JSX.Element {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/?type=sale&limit=4`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/listings/?type=sale&limit=4`,
+        );
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
@@ -48,25 +54,37 @@ export default function Home(): React.JSX.Element {
   return (
     <div>
       {/* top */}
-      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
-        <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
-          Find your next <span className="text-blue-500">perfect</span>
-          <br />
-          place with ease
-        </h1>
-        <div className="text-gray-400 text-xs sm:text-sm">
-          PlotTrade is the best place to find your next perfect place to live.
-          <br />
-          We have a wide range of properties for you to choose from.
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 p-10 px-3 max-w-6xl mx-auto">
+        {/* Left Side: Content */}
+        <div className="flex flex-col gap-6 flex-1">
+          <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
+            Step into your future <span className="text-blue-500">Door</span>
+            <br />
+            effortlessly
+          </h1>
+          <div className="text-gray-400 text-xs sm:text-sm">
+            PlotTrade is the best place to find your next perfect place to live.
+            <br />
+            We have a wide range of properties for you to choose from.
+          </div>
+
+          <div className="flex items-start">
+            <Link
+              to="/search"
+              className="inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 transition duration-200"
+            >
+              Let's get started...
+            </Link>
+          </div>
         </div>
 
-        <div className="flex items-start">
-          <Link
-            to="/search"
-            className="inline-block px-6 py-3 bg-blue-500 text-white font-semibold rounded-full shadow-md hover:bg-blue-600 transition duration-200"
-          >
-            Let's get started...
-          </Link>
+        {/* Right Side: Image */}
+        <div className="flex-1 flex justify-center lg:justify-end w-full">
+          <img
+            src="/public/hero.png"
+            alt="Property graphic"
+            className="w-full max-w-lg h-auto object-contain"
+          />
         </div>
       </div>
 
