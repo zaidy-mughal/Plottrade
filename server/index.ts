@@ -57,6 +57,15 @@ async function startServer() {
     });
   });
 
+  app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || "development",
+    });
+  });
+
   app.use("/api/user", UserRoutes);
   app.use("/api/auth", AuthRoutes);
   app.use("/api/listings", ListingRoutes);
