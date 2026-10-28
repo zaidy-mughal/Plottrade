@@ -57,6 +57,15 @@ async function startServer() {
     });
   });
 
+  app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || "development",
+    });
+  });
+
   app.use("/api/user", UserRoutes);
   app.use("/api/auth", AuthRoutes);
   app.use("/api/listings", ListingRoutes);
@@ -104,8 +113,8 @@ async function startServer() {
   );
 
   // 7. Start listening
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
+  const PORT = Number(process.env.PORT) || 5000;
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}!`);
   });
 }
