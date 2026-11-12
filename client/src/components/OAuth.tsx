@@ -23,6 +23,7 @@ export default function OAuth({ role }: OAuthProps): React.JSX.Element {
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/google`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },

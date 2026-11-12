@@ -17,6 +17,13 @@ export default function Home(): React.JSX.Element {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/listings/?offer=true&limit=4`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
         );
         const data = await res.json();
         setOfferListings(data);
@@ -29,6 +36,13 @@ export default function Home(): React.JSX.Element {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/listings/?type=rent&limit=4`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
         );
         const data = await res.json();
         setRentListings(data);
@@ -42,6 +56,13 @@ export default function Home(): React.JSX.Element {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/listings/?type=sale&limit=4`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
         );
         const data = await res.json();
         setSaleListings(data);

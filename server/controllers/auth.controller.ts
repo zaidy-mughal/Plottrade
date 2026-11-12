@@ -4,7 +4,11 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { errorHandler } from "../utils/errorHandler.js";
 
-export const signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const { username, email, password, role } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
   const newUser = new User({ username, email, password: hashedPassword, role });
@@ -16,7 +20,11 @@ export const signup = async (req: Request, res: Response, next: NextFunction): P
   }
 };
 
-export const signin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const signin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const { email, password, role } = req.body;
   try {
     const validUser = await User.findOne({ email, role });
@@ -29,10 +37,19 @@ export const signin = async (req: Request, res: Response, next: NextFunction): P
       return next(errorHandler(500, "JWT_SECRET is not defined"));
     }
 
-    const token = jwt.sign({ id: validUser._id, role: validUser.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign(
+      { id: validUser._id, role: validUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
     const { password: pass, ...rest } = validUser.toObject();
     res
-      .cookie("access_token", token, { httpOnly: true })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000,
+      })
       .status(200)
       .json(rest);
   } catch (error) {
@@ -40,18 +57,34 @@ export const signin = async (req: Request, res: Response, next: NextFunction): P
   }
 };
 
-export const google = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const google = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     if (!process.env.JWT_SECRET) {
       return next(errorHandler(500, "JWT_SECRET is not defined"));
     }
 
-    const user = await User.findOne({ email: req.body.email, role: req.body.role });
+    const user = await User.findOne({
+      email: req.body.email,
+      role: req.body.role,
+    });
     if (user) {
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      const token = jwt.sign(
+        { id: user._id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" },
+      );
       const { password: pass, ...rest } = user.toObject();
       res
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
         .status(200)
         .json(rest);
     } else {
@@ -69,10 +102,19 @@ export const google = async (req: Request, res: Response, next: NextFunction): P
         role: req.body.role,
       });
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+      const token = jwt.sign(
+        { id: newUser._id, role: newUser.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" },
+      );
       const { password: pass, ...rest } = newUser.toObject();
       res
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
         .status(200)
         .json(rest);
     }
@@ -81,7 +123,11 @@ export const google = async (req: Request, res: Response, next: NextFunction): P
   }
 };
 
-export const signOut = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const signOut = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     res.clearCookie("access_token");
     res.status(200).json("User has been logged out!");
@@ -89,4 +135,3 @@ export const signOut = async (req: Request, res: Response, next: NextFunction): 
     next(error);
   }
 };
-

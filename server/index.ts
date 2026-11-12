@@ -16,6 +16,8 @@ async function startServer() {
 
   const app: Application = express();
 
+  app.set("trust proxy", 1);
+
   // 2. Connect to MongoDB
   const dbConnectionString = process.env.DB_CONNECTION_STRING;
   if (!dbConnectionString) {
@@ -45,6 +47,7 @@ async function startServer() {
   // 4. Standard middleware
   app.use(morgan("dev"));
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
   // 5. Routes
@@ -114,7 +117,7 @@ async function startServer() {
 
   // 7. Start listening
   const PORT = Number(process.env.PORT) || 5000;
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port ${PORT}!`);
   });
 }

@@ -52,7 +52,13 @@ export default function UpdateListing(): React.JSX.Element {
 
       try {
         setLoading(true);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/${listingId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/${listingId}`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await res.json();
         
         if (data.success === false) {
@@ -106,6 +112,7 @@ export default function UpdateListing(): React.JSX.Element {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
         }
       );
 
@@ -207,6 +214,7 @@ export default function UpdateListing(): React.JSX.Element {
       // Targets the dynamic update execution path via POST/PUT parameter
       const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/update/${params.listingId}`, {
         method: "PATCH",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

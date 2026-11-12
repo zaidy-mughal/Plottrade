@@ -31,7 +31,13 @@ export default function Listing(): React.JSX.Element {
     const fetchListing = async (): Promise<void> => {
       try {
         setLoading(true);
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/${params.listingId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/${params.listingId}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         const data = await res.json();
         if (data.success === false) {
           setError(true);
