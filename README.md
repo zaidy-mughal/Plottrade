@@ -4,7 +4,8 @@ PlotTrade is a full-stack real estate marketplace for browsing, filtering, and m
 
 ## Live Demo Link
 
-[CLICK TO SEE THE CRAFT.](https://plottrade.aavys.app/)
+[CLICK TO SEE MY CRAFT !!! Before AWS Credits time ended.](https://plottrade.aavys.app/)
+
 
 ## Features
 
@@ -23,9 +24,9 @@ PlotTrade is a full-stack real estate marketplace for browsing, filtering, and m
 - Authentication: Firebase
 - Media: Cloudinary
 - Package manager: pnpm
-- Deployment: AWS EC2, AWS Secrets Manager, IAM, Linux, Docker, Nginx.
+- Deployment: AWS EC2, Application Load Balancer, Auto Scaling, S3, CloudFront, AWS Secrets Manager, IAM, Linux, and Docker
 - Domain: Name.com
-- SSL Certificate: LetsEncryp and certbot.
+- SSL Certificate: AWS Certificate Manager (ACM)
 
 ## Architecture Overview
 
@@ -36,6 +37,7 @@ PlotTrade uses a simple client-server architecture:
 3. MongoDB stores user and listing documents through Mongoose models.
 4. Authenticated requests rely on an HTTP-only `access_token` cookie containing a JWT.
 5. Firebase handles Google authentication, while Cloudinary is used for image uploads.
+
 
 ## Installation Instructions
 
