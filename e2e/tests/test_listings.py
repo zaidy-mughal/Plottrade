@@ -13,7 +13,7 @@ def test_seller_can_create_listing(driver, tmp_path):
     login_page = LoginPage(driver)
     login_page.load()
     login_page.select_role("seller")
-    login_page.login("seller1@plottrade.com", "TestPass123!")
+    login_page.login("harisamjad@gmail.com", "Pass@1234!")
     login_page.wait.until(EC.url_to_be("http://localhost:5173/"))
 
     # 3. Create Listing Workflow

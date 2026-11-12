@@ -10,8 +10,12 @@ export default function MyListings(): React.JSX.Element {
     const fetchUserListings = async (): Promise<void> => {
       setLoading(true);
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/me`,{
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/me`, {
+          method: "GET",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         const data = await res.json();
         setListings(data);
@@ -34,6 +38,10 @@ export default function MyListings(): React.JSX.Element {
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/listings/delete/${listingId}`, {
           method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         const data = await res.json();
         if (data.success === false) return;

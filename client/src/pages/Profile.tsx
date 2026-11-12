@@ -54,6 +54,7 @@ export default function Profile(): React.JSX.Element {
             setProgress(percent);
           }
         },
+        withCredentials: true,
       },
     );
 
@@ -78,6 +79,9 @@ export default function Profile(): React.JSX.Element {
         `${import.meta.env.VITE_API_URL}/user/update/avatar/${currentUser._id}`,
         {
           avatar: imageUrl,
+        },
+        {
+          withCredentials: true,
         },
       );
 
@@ -112,6 +116,7 @@ export default function Profile(): React.JSX.Element {
         `${import.meta.env.VITE_API_URL}/user/update/${currentUser._id}`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -141,6 +146,10 @@ export default function Profile(): React.JSX.Element {
         `${import.meta.env.VITE_API_URL}/user/delete/${currentUser._id}`,
         {
           method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
       );
       const data = await res.json();
@@ -160,6 +169,13 @@ export default function Profile(): React.JSX.Element {
       dispatch(signOutUserStart());
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/auth/signout`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       );
       const data = await res.json();
       if (data.success === false) {

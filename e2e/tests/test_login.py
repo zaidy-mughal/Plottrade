@@ -12,7 +12,7 @@ def get_test_data():
 def test_user_login(driver, user):
     login_page = LoginPage(driver)
     login_page.load()
-    
+
     login_page.select_role(user["role"])
     login_page.login(user["email"], user["password"])
     

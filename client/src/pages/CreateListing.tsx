@@ -74,6 +74,7 @@ export default function CreateListing(): React.JSX.Element {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          withCredentials: true,
           onUploadProgress: (event) => {
             if (event.total) {
               const progress = Math.round((event.loaded * 100) / event.total);
